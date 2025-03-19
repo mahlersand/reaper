@@ -9,15 +9,15 @@ if("${REAPER_VERSION}")
     )
 else()
     project(
-        reap-bootstrap
+        reap-standalone
         VERSION 0.0.1
-        DESCRIPTION "the parser generator of reaper (bootstrap)"
+        DESCRIPTION "the parser generator of reaper (standalone)"
         LANGUAGES CXX
     )
 endif()
 
 add_executable(reap
-    main.cpp
+    src/main.cpp
 )
 target_link_libraries(reap
     PRIVATE reaper
