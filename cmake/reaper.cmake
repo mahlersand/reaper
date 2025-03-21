@@ -15,11 +15,22 @@ function(add_reaper_grammar name)
         ${ARGN}
     )
 
+    message(status "[add_reaper_grammar] ${CMAKE_BINARY_DIR}/bootstrap/bin/reap ${arg_SOURCE}")
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/grammars/")
-    file(TOUCH "${CMAKE_CURRENT_BINARY_DIR}/include/grammars/${name}.h")
+    execute_process(COMMAND "${CMAKE_BINARY_DIR}/bootstrap/bin/reap" "${CMAKE_CURRENT_SOURCE_DIR}/${arg_SOURCE}"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+    #file(TOUCH "${CMAKE_CURRENT_BINARY_DIR}/include/grammars/${name}.h")
 
-    execute_process(COMMAND "${CMAKE_BINARY_DIR}/bootstrap/bin/reap" "${arg_SOURCE}"
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    add_custom_command(
+        OUTPUT
+            ${CMAKE_CURRENT_BINARY_DIR}/include/grammars/${name}.h
+        COMMAND
+            reap
+        ARGS
+            ${CMAKE_CURRENT_SOURCE_DIR}/${arg_SOURCE}
+        DEPENDS
+            ${CMAKE_CURRENT_SOURCE_DIR}/${arg_SOURCE}
     )
 
     add_library(${name} INTERFACE)
