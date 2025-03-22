@@ -7,9 +7,12 @@ project(
     LANGUAGES CXX
 )
 
+find_package(ICU REQUIRED COMPONENTS uc)
+
 include(cmake/reaper.cmake)
 
 add_subdirectory(lib)
 add_subdirectory(reap)
 
 add_subdirectory(examples)
+

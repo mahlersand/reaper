@@ -15,5 +15,8 @@ target_compile_features(reaper
 target_include_directories(reaper
     PUBLIC include
 )
+target_link_libraries(reaper
+    PUBLIC ICU::uc
+)
 
 install(TARGETS reaper)
