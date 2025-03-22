@@ -2,10 +2,11 @@ if(NOT "${REAP_NO_BOOTSTRAP}")
     message(STATUS "Building reap")
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/bootstrap")
         message(STATUS "No reap build found, setting up")
-        message(STATUS "${CMAKE_COMMAND} -DREAP_NO_BOOTSTRAP=1 -DCMAKE_BUILD_TYPE=Release -S \"${CMAKE_SOURCE_DIR}\" -B \"${CMAKE_BINARY_DIR}/bootstrap\"")
+        message(STATUS "${CMAKE_COMMAND} -DREAP_NO_BOOTSTRAP=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -S \"${CMAKE_SOURCE_DIR}\" -B \"${CMAKE_BINARY_DIR}/bootstrap\"")
         execute_process(COMMAND ${CMAKE_COMMAND}
             -DREAP_NO_BOOTSTRAP=1
             -DCMAKE_BUILD_TYPE=Release
+            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
             -S "${CMAKE_SOURCE_DIR}"
             -B "${CMAKE_BINARY_DIR}/bootstrap"
         )

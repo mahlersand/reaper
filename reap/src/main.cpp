@@ -4,7 +4,9 @@
 #include <vector>
 #include <fstream>
 
-#include <mb_string_view.h>
+#include <reaper/util/mb_string_view.h>
+
+constexpr auto F = ^^int;
 
 int main(int argc, char** argv)
 {
@@ -14,6 +16,10 @@ int main(int argc, char** argv)
 
     std::cout << "Welcome to reap" << "\n"
               << "Executing command \"";
+
+    if(args.size() < 2)
+        return 2;
+
     for(bool f = false; auto& s : args) {
         if(f)
             std::cout << " ";
@@ -25,6 +31,10 @@ int main(int argc, char** argv)
 
     {
         std::ifstream f(args[1], std::ios_base::binary | std::ios_base::ate);
+        if(!f.is_open()) {
+            std::cerr << "File" + args[1] + " not found" << std::endl;
+            return 1;
+        }
         auto len = f.tellg();
         f.seekg(0);
 

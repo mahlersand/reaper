@@ -1,11 +1,8 @@
 include(cmake/reap_bootstrap.cmake)
 
 function(add_reaper_grammar name)
-    if("${REAP_NO_BOOTSTRAP}")
-        return()
-    endif()
     set(args_option)
-    set(args_single SOURCE)
+    set(args_single SOURCE PREFIX)
     set(args_multi)
 
     cmake_parse_arguments("arg"
@@ -15,12 +12,16 @@ function(add_reaper_grammar name)
         ${ARGN}
     )
 
-    message(status "[add_reaper_grammar] ${CMAKE_BINARY_DIR}/bootstrap/bin/reap ${arg_SOURCE}")
-    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/grammars/")
-    execute_process(COMMAND "${CMAKE_BINARY_DIR}/bootstrap/bin/reap" "${CMAKE_CURRENT_SOURCE_DIR}/${arg_SOURCE}"
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    )
-    #file(TOUCH "${CMAKE_CURRENT_BINARY_DIR}/include/grammars/${name}.h")
+    if(NOT "${REAP_NO_BOOTSTRAP}")
+        message(STATUS "[add_reaper_grammar] ${CMAKE_BINARY_DIR}/bootstrap/bin/reap ${arg_SOURCE}")
+        file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include/grammars/")
+        execute_process(
+            COMMAND
+                "${CMAKE_BINARY_DIR}/bootstrap/bin/reap" "${CMAKE_CURRENT_SOURCE_DIR}/${arg_SOURCE}"
+            WORKING_DIRECTORY
+                ${CMAKE_CURRENT_BINARY_DIR}
+        )
+    endif(NOT "${REAP_NO_BOOTSTRAP}")
 
     add_custom_command(
         OUTPUT
@@ -43,5 +44,11 @@ function(add_reaper_grammar name)
     target_sources(${name}
         INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include/grammars/${name}.h"
         INTERFACE "${arg_SOURCE}"
+    )
+    target_compile_options(${name}
+        INTERFACE ${REAPER_COMPILE_OPTIONS}
+    )
+    target_link_options(${name}
+        INTERFACE ${REAPER_LINK_OPTIONS}
     )
 endfunction(add_reaper_grammar)
